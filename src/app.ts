@@ -5,6 +5,8 @@ const addressInput = document.getElementById("address")! as HTMLInputElement;
 
 const GOOGLE_API_KEY = "InsiraSuaKeyAqui";
 
+declare var google: any; // irá liberar acesso para o TS entender que existe essa variável atribuída globalmente
+
 type GoogleGeoResponse = {
   results: { geometry: { location: { lat: number; long: number } } }[];
   status: "OK" | "ZERO_RESULTS";
@@ -25,6 +27,12 @@ function searchAddress(event: Event) {
         throw new Error("Endereço não encontrado!");
       }
       const coordinates = response.data.results[0].geometry.location;
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: coordinates,
+        zoom: 8,
+      });
+
+      new google.maps.Marker({ position: coordinates, map: map });
     })
     .catch((err) => {
       alert(err.message);
